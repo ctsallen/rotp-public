@@ -26,11 +26,12 @@ jobs:
       # execute the actual maven step that will call jpackage and create the installer          
       - name: Build with Maven
         run: mvn -B clean package jpackage:jpackage
-      #- name: Update Automatic Release
-      #  uses: marvinpinto/action-automatic-releases@latest
-      #  with:
-      #    repo_token: "${{ secrets.GITHUB_TOKEN}}"
-      #    automatic_release_tag: "macOS-latest"
-      #    prerelease: true
-      #    title: "macOS Development Build"
-      #    files: ./target/*.dmg
+      # Enable automatic
+      - name: Update Automatic Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN}}"
+          automatic_release_tag: "macOS-latest"
+          prerelease: true
+          title: "macOS Development Build"
+          files: ./target/*.dmg
