@@ -21,16 +21,11 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 17
-          distribution: temurin
-#      - name: Cache Maven packages
-#        uses: actions/cache@v2
-#        with:
-#          path: ~/.m2
-#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-#          restore-keys: ${{ runner.os }}-m2
+          distribution: adopt
+          cache: maven
       # execute the actual maven step that will call jpackage and create the installer          
       - name: Build with Maven
-        run: mvn -B clean package jpackage:jpackage -f ../pom.xml
+        run: mvn -B clean package jpackage:jpackage
       #- name: Update Automatic Release
       #  uses: marvinpinto/action-automatic-releases@latest
       #  with:
