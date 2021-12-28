@@ -30,7 +30,7 @@ jobs:
 #          restore-keys: ${{ runner.os }}-m2
       # execute the actual maven step that will call jpackage and create the installer          
       - name: Build with Maven
-        run: mvn -B clean package jpackage:jpackage
+        run: mvn -B clean package jpackage:jpackage -f rotp-public/pom.xml
       #- name: Update Automatic Release
       #  uses: marvinpinto/action-automatic-releases@latest
       #  with:
