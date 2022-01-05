@@ -233,8 +233,7 @@ public class UserPreferences {
         save();
     }
     public static void load() {
-        String path = Rotp.jarPath();
-        File configFile = new File(path, PREFERENCES_FILE);
+        File configFile = getPreferencesFile();
 		// modnar: change to InputStreamReader, force UTF-8
 		try ( BufferedReader in = new BufferedReader( new InputStreamReader( new FileInputStream(configFile), "UTF-8"));) {
             String input;
@@ -244,17 +243,16 @@ public class UserPreferences {
             }
         }
         catch (FileNotFoundException e) {
-            System.err.println(path+PREFERENCES_FILE+" not found.");
+            System.err.println(configFile.getAbsolutePath()+" not found.");
         }
         catch (IOException e) {
             System.err.println("UserPreferences.load -- IOException: "+ e.toString());
         }
     }
     public static int save() {
-        String path = Rotp.jarPath();
-        try (FileOutputStream fout = new FileOutputStream(new File(path, PREFERENCES_FILE));
-            // modnar: change to OutputStreamWriter, force UTF-8
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(fout, "UTF-8")); ) {
+        try (FileOutputStream fout = new FileOutputStream(getPreferencesFile());
+             // modnar: change to OutputStreamWriter, force UTF-8
+             PrintWriter out = new PrintWriter(new OutputStreamWriter(fout, "UTF-8")); ) {
             out.println(keyFormat("DISPLAY_MODE")+displayModeToSettingName(displayMode));
             out.println(keyFormat("GRAPHICS")+graphicsModeToSettingName(graphicsMode));
             out.println(keyFormat("MUSIC")+ yesOrNo(playMusic));
@@ -283,6 +281,20 @@ public class UserPreferences {
         }
     }
     private static String keyFormat(String s)  { return String.format(keyFormat, s); }
+    private static File getPreferencesFile() { // OS specific approach to preference file
+        File file;
+        String path;
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            path = Rotp.jarPath();
+            file = new File(path, PREFERENCES_FILE);
+        } else { // Linux and macOS use the standard user HOME/.config location for the preferences file so that they
+                 // do not need admin permissions to write to the preferences file when installed to standard locations.
+            path = System.getProperty("user.home") + "/.config/remnants/";
+            file = new File(path, PREFERENCES_FILE);
+            file.getParentFile().mkdirs(); // no-op if the directory already exists, otherwise creates it
+        }
+        return file;
+    }
     
     private static void loadPreferenceLine(String line) {
         if (line.isEmpty())

@@ -8,11 +8,13 @@
     <artifactId>rotp-public</artifactId>
     <version>1.0</version>
 
-    <!-- using properties to centralize versions of dependencies -->
+    <!-- using properties to centralize versions of dependencies
+         long-term, there should be a centralized properties file that both this and the Rotp class can reference -->
     <properties>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <jpackage-maven-plugin.version>1.5.1</jpackage-maven-plugin.version>
+        <application.icon>src/rotp/images/application/rotp</application.icon>
     </properties>
 
     <build>
@@ -82,10 +84,9 @@
                     <appVersion>${version}</appVersion>
                     <mainJar>${project.artifactId}.jar</mainJar>
                     <destination>target</destination>
-                    <vendor>Ray Fowloer</vendor>
+                    <vendor>Ray Fowler</vendor>
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
-                        <option>-splash:rotp_splash.bmp</option>
                     </javaOptions>
                 </configuration>
             </plugin>
@@ -108,7 +109,7 @@
                         <artifactId>jpackage-maven-plugin</artifactId>
                         <version>${jpackage-maven-plugin.version}</version>
                         <configuration>
-                            <icon>launch4j/rotp.ico</icon>
+                            <icon>${application.icon}.ico</icon>
                             <winMenu>true</winMenu> <!-- create a Start Menu entry -->
                             <winShortcut>true</winShortcut> <!-- create a Desktop shortcut -->
                             <winDirChooser>true</winDirChooser> <!-- let the user choose the install location -->
@@ -132,7 +133,7 @@
                         <artifactId>jpackage-maven-plugin</artifactId>
                         <version>${jpackage-maven-plugin.version}</version>
                         <configuration>
-                            <icon>src/rotp/images/application/rotp.icns</icon>
+                            <icon>${application.icon}.icns</icon>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -144,6 +145,7 @@
             <id>linux</id>
             <activation>
                 <os>
+                    <name>Linux</name>
                     <family>unix</family>
                 </os>
             </activation>
@@ -154,7 +156,7 @@
                         <artifactId>jpackage-maven-plugin</artifactId>
                         <version>${jpackage-maven-plugin.version}</version>
                         <configuration>
-                            <icon>src/rotp/images/application/rotp.png</icon>
+                            <icon>${application.icon}.png</icon>
                             <linuxShortcut>true</linuxShortcut>
                             <linuxMenuGroup>Game</linuxMenuGroup>
                             <linuxAppCategory>games</linuxAppCategory>
