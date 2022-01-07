@@ -5,3 +5,6 @@ build
 build.xml
 manifest.mf
 launch4j/Remnants/
+target/
+.idea
+*.iml

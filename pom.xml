@@ -15,6 +15,7 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <jpackage-maven-plugin.version>1.5.1</jpackage-maven-plugin.version>
         <application.icon>src/rotp/images/application/rotp</application.icon>
+        <application.destination>target</application.destination>
     </properties>
 
     <build>
@@ -83,7 +84,7 @@
                     <input>target/dist</input>
                     <appVersion>${version}</appVersion>
                     <mainJar>${project.artifactId}.jar</mainJar>
-                    <destination>target</destination>
+                    <destination>${application.destination}</destination>
                     <vendor>Ray Fowler</vendor>
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>

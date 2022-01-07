@@ -1,8 +1,6 @@
-# Currently, the .dmg file generated is not signed and thus cannot be installed on newer versions of macOS. 
+# Creates installers for macOS, Windows, and Linux-based distributions.
+name: Build Installers
 
-name: Build macOS Installer
-
-# Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch. Newer repos use 'main'
   # terminology rather than 'master'. So, if you look up examples you might see 'main' instead of 'master' listed.
@@ -17,12 +15,12 @@ on:
 
 jobs:
   build:
-    # The type of runner that the job will run on (e.g. macOS, win, linux)
+    # For each of the steps listed below, run them on all the OSes that are listed (e.g. macOS, win, linux)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-    
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
@@ -31,15 +29,11 @@ jobs:
           java-version: 17
           distribution: adopt
           cache: maven
-      # execute the actual maven step that will call jpackage and create the installer          
+      # execute the actual maven step that will call jpackage and create the installer
       - name: Build with Maven
-        run: mvn -B clean package jpackage:jpackage
-      # Enable automatic
-      - name: Update Automatic Release
-        uses: marvinpinto/action-automatic-releases@latest
+        run: mvn -B clean package jpackage:jpackage -Dapplication.destination=${{ matrix.os }}
+      # uploads the artifact so that it can be later packaged into an auto-cut release
+      - uses: actions/upload-artifact@v2
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN}}"
-          automatic_release_tag: "dev-latest"
-          prerelease: true
-          title: "Development Build"
-          files: ./target/Remnants*.*
+          name: ${{ matrix.os }}-artifact
+          path: target/${{ matrix.os }}/*
