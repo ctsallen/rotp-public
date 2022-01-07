@@ -42,7 +42,4 @@ jobs:
           automatic_release_tag: "dev-latest"
           prerelease: true
           title: "Development Build"
-          files: |
-            ./target/*.dmg
-            ./target/*.exe
-            ./target/*.deb
+          files: ./target/Remnants*.*
