@@ -35,7 +35,7 @@ jobs:
       # uploads the artifact so that it can be later packaged into an auto-cut release
       - uses: actions/upload-artifact@v2
         with:
-#          name: ${{ matrix.os }}-artifact
+          name: ${{ matrix.os }}-artifact
           path: target/${{ matrix.os }}/*
           retention-days: 5
 
@@ -47,6 +47,12 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           path: artifacts
+      # some debug
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: artifacts
       - name: Update Automatic Release
         uses: marvinpinto/action-automatic-releases@latest
         with:
@@ -54,6 +60,4 @@ jobs:
           automatic_release_tag: "dev-latest"
           prerelease: true
           title: "Development Build"
-          files: |
-            *.exe
-            *.deb
+          files: /home/runner/work/rotp-public/rotp-public/artifacts/*
