@@ -37,6 +37,7 @@ jobs:
         with:
           name: ${{ matrix.os }}-artifact
           path: target/${{ matrix.os }}/*
+          retention: 5
 
   release:
     needs: build
@@ -53,4 +54,4 @@ jobs:
           automatic_release_tag: "dev-latest"
           prerelease: true
           title: "Development Build"
-          files: ./artifacts/*
+          files: /home/runner/work/rotp-public/rotp-public/artifacts/*
