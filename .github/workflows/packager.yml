@@ -39,6 +39,7 @@ jobs:
           path: target/${{ matrix.os }}/*
 
   release:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       # download the ubuntu and windows artifacts for now since macOS isn't signed yet.
