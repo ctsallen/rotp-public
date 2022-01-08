@@ -50,9 +50,6 @@ jobs:
       # some debug
       - name: Display structure of downloaded files
         run: ls -R
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: artifacts
       - name: Update Automatic Release
         uses: marvinpinto/action-automatic-releases@latest
         with:
@@ -60,4 +57,4 @@ jobs:
           automatic_release_tag: "dev-latest"
           prerelease: true
           title: "Development Build"
-          files: /home/runner/work/rotp-public/rotp-public/artifacts/*
+          files: ./artifacts/**/*
