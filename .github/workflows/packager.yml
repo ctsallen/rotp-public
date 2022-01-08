@@ -3,13 +3,13 @@ name: Build Installers
 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch. Newer repos use 'main'
-#  # terminology rather than 'master'. So, if you look up examples you might see 'main' instead of 'master' listed.
-#  push:
-#    branches:
-#      - master
-#  pull_request:
-#    branches:
-#      - master
+  # terminology rather than 'master'. So, if you look up examples you might see 'main' instead of 'master' listed.
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
