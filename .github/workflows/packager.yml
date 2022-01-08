@@ -45,9 +45,6 @@ jobs:
       # download the ubuntu and windows artifacts for now since macOS isn't signed yet.
       - uses: actions/download-artifact@v2
         with:
-          name: |
-            ubuntu-latest-artifact
-            windows-latest-artifact
           path: artifacts
       - name: Update Automatic Release
         uses: marvinpinto/action-automatic-releases@latest
