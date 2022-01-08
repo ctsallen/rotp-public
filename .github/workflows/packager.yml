@@ -3,13 +3,13 @@ name: Build Installers
 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch. Newer repos use 'main'
-  # terminology rather than 'master'. So, if you look up examples you might see 'main' instead of 'master' listed.
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+#  # terminology rather than 'master'. So, if you look up examples you might see 'main' instead of 'master' listed.
+#  push:
+#    branches:
+#      - master
+#  pull_request:
+#    branches:
+#      - master
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -37,3 +37,22 @@ jobs:
         with:
           name: ${{ matrix.os }}-artifact
           path: target/${{ matrix.os }}/*
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      # download the ubuntu and windows artifacts for now since macOS isn't signed yet.
+      - uses: actions/download-artifact@v2
+        with:
+          name: |
+            ubuntu-latest-artifact
+            windows-latest-artifact
+          path: artifacts
+      - name: Update Automatic Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN}}"
+          automatic_release_tag: "dev-latest"
+          prerelease: true
+          title: "Development Build"
+          files: ./artifacts/*
