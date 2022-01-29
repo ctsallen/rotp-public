@@ -155,12 +155,19 @@ public class Rotp {
     }
     public static String jarPath()  {
         if (startupDir == null) {
-            try {
-                File jarFile = new File(Rotp.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-                startupDir = jarFile.getParentFile().getPath();
-            } catch (URISyntaxException ex) {
-                System.out.println("Unable to resolve jar path: "+ex.toString());
-                startupDir = ".";
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                try {
+                    File jarFile = new File(Rotp.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+                    startupDir = jarFile.getParentFile().getPath();
+                } catch (URISyntaxException ex) {
+                    System.out.println("Unable to resolve jar path: " + ex.toString());
+                    startupDir = ".";
+                }
+            } else {
+                // Linux and macOS use the standard user HOME/.config location for the preferences file so that they
+                // do not need admin permissions to write to the preferences file when installed to standard locations.
+                startupDir = System.getProperty("user.home") + "/.config/remnants/";
+                new File(startupDir).mkdirs(); // no-op if the directory already exists, otherwise creates it
             }
         }
         return startupDir;

@@ -1,0 +1,63 @@
+# Creates installers for macOS, Windows, and Linux-based distributions.
+name: Build Installers
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch. Newer repos use 'main'
+  # terminology rather than 'master'. So, if you look up examples you might see 'main' instead of 'master' listed.
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    # For each of the steps listed below, run them on all the OSes that are listed (e.g. macOS, win, linux)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+          distribution: adopt
+          cache: maven
+      # execute the actual maven step that will call jpackage and create the installer
+      - name: Build with Maven
+        run: mvn -B "-Dapplication.destination=${{ matrix.os }}" clean package jpackage:jpackage
+      - name: Sign the code
+        if: runner.os == 'macOS'
+        run: codesign --force --deep -s - target/${{ matrix.os }}/*
+      # uploads the artifact so that it can be later packaged into an auto-cut release
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}-artifact
+          path: target/${{ matrix.os }}/*
+          retention-days: 5
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # download the ubuntu and windows artifacts for now since macOS isn't signed yet.
+      - uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+      # some debug
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Update Automatic Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN}}"
+          automatic_release_tag: "dev-latest"
+          prerelease: true
+          title: "Development Build"
+          files: ./artifacts/**/*
