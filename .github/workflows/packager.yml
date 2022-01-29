@@ -37,7 +37,6 @@ jobs:
          if [ "$RUNNER_OS" == "macOS" ]; then
               codesign --force -s - target/${{ matrix.os }}/*
          fi
-         shell: bash 
       # uploads the artifact so that it can be later packaged into an auto-cut release
       - uses: actions/upload-artifact@v2
         with:
