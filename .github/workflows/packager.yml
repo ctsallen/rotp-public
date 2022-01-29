@@ -34,7 +34,7 @@ jobs:
         run: mvn -B "-Dapplication.destination=${{ matrix.os }}" clean package jpackage:jpackage
       - name: Sign the code
         if: runner.os == 'macOS'
-        run: codesign --force -s - target/${{ matrix.os }}/*
+        run: codesign --force --deep -s - target/${{ matrix.os }}/*
       # uploads the artifact so that it can be later packaged into an auto-cut release
       - uses: actions/upload-artifact@v2
         with:
